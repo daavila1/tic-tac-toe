@@ -21,6 +21,7 @@ green = (0, 255, 0)
 
 # Agents
 user = None
+board = logic.initial_state()
 
 # Main loop
 running = True
@@ -33,7 +34,7 @@ while running:
     screen.fill(black)
 
     # User choose X or O
-    if user is None:
+    if user is not None:
         # Draw title
         title = font.render("Hello, gamer! :)", True, white)
         title_rect = title.get_rect()
@@ -69,14 +70,38 @@ while running:
         # Check if left button is clicked
         if pygame.mouse.get_pressed()[0]:
             x, y = pygame.mouse.get_pos()  # Get click position
-    
+
             # If mouse coordinates coincide within button coordinates send info to logic
             if button_play_x.collidepoint(x, y):
                 time.sleep(0.1)  # Avoid multiple prints
                 print("playing as X")
             elif button_play_o.collidepoint(x, y):
-                time.sleep(0.1) # Avoid multiple prints
+                time.sleep(0.1)  # Avoid multiple prints
                 print("playing as O")
+
+    # User not None: game has started
+    else:
+        # Draw game board
+        tile_size = 80
+        # Get upper-left corner of the game board
+        tile_origin = ((width - (tile_size * 3)) / 2, (height - (tile_size * 3)) / 2)
+        tiles = []
+
+        # Rows
+        for i in range(3):
+            row = []
+            for j in range(3):
+                tile = pygame.Rect(
+                    tile_origin[0] + j * tile_size,  # left
+                    tile_origin[1] + i * tile_size,  # Top
+                    tile_size,
+                    tile_size
+                )
+                pygame.draw.rect(screen, green, tile, 1)
                 
+            # TO DO: implement logic to set a movement in the board
+            
+        # Show title
+        
 
     pygame.display.flip()
