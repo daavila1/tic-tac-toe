@@ -25,7 +25,6 @@ def who_plays(board):
     for row in board:
         x_count += row.count(X)
         o_count += row.count(O)
-
     if x_count == o_count:
         return X
     else:
@@ -34,7 +33,20 @@ def who_plays(board):
 
 # TO DO:
 def game_over(board):
-    pass
+    """
+    Returns boolean indicating if the game is over
+    """
+    # If some player has won
+    if winner(board):
+        return True
+    # If there is no winner but there is not any empty tile to play
+    elif not any(
+        board[i][j] is None for i in range(len(board)) for j in range(len(board))
+    ):
+        return True
+    # Else: game continues
+    else:
+        return False
 
 
 def winner(board):
