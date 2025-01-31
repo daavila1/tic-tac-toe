@@ -21,7 +21,7 @@ green = (0, 255, 0)
 
 # Agents
 user = None
-ai = None
+ai = False  # boolean for ai turn or nor
 
 # Environment
 board = logic.initial_state()
@@ -102,20 +102,20 @@ while running:
                 tile = pygame.Rect(
                     tile_origin[0] + j * tile_size,  # left
                     tile_origin[1] + i * tile_size,  # Top
-                    tile_size, # Width
-                    tile_size, # Height
+                    tile_size,  # Width
+                    tile_size,  # Height
                 )
                 pygame.draw.rect(screen, green, tile, 1)
-                
+
                 # Draw each made move into the board
                 # Check for not empty tile
                 if board[i][j] is not None:
                     # Render saved text board i, j into the corresponding tile
                     move = font.render(board[i][j], True, white)
-                    moveRect = move.get_rect() # Get the rect of move
-                    moveRect.center = tile.center 
-                    screen.blit(move, moveRect)
-                
+                    move_rect = move.get_rect()  # Get the rect of move
+                    move_rect.center = tile.center
+                    screen.blit(move, move_rect)
+
                 row.append(tile)
             tiles.append(row)
 
@@ -139,34 +139,52 @@ while running:
             title = f"Plays as {user}"
         else:
             title = "Computer thinking..."
-            
+
         title = font.render(title, True, white)
         title_rect = title.get_rect()
         title_rect.center = ((width / 2), 50)
         screen.blit(title, title_rect)
-        
+
         # Check for AI move
         if not game_over and user != player:
             if ai:
                 time.sleep(0.1)
-                move = logic.min_max(board) # TODO: implement MIX MAX
+                move = logic.min_max(board)  # TODO: implement MIX MAX
                 board = logic.movement(board, move)
                 ai = False
-            
+
             else:
                 ai = True
-        
+
         # Check for user move
         # If user left-click and user playing and not game over
         if pygame.mouse.get_pressed()[0] and user == player and not game_over:
             x, y = pygame.mouse.get_pos()  # Get click position
-            
+
             for i in range(len(board)):
                 for j in range(len(board)):
-                    if (board[i][j] is None and tiles[i][j].collidepoint(x, y)):
+                    if board[i][j] is None and tiles[i][j].collidepoint(x, y):
                         board = logic.movement(board, (i, j))
-        
-        
-        
+
+        # Check for game over
+        if game_over:
+            # Draw button
+            play_again_button = pygame.Rect(width / 3, height - 60, width / 3, 50)
+            play_again_text = font.render("Play Again", True, black)
+            play_again_rect = play_again_text.get_rect()
+            play_again_rect.center = play_again_button.center
+            pygame.draw.rect(screen, white, play_again_button)
+            screen.blit(play_again_text, play_again_rect)
+
+            if pygame.mouse.get_pressed()[0]:
+                x, y = pygame.mouse.get_pos()
+
+                if play_again_button.collidepoint(x, y):
+                    # reset initial game state
+                    time.sleep(0.1)
+                    user = None
+                    ai = False
+                    user = None
+                    board = logic.initial_state()
 
     pygame.display.flip()
