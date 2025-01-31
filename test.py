@@ -127,6 +127,21 @@ def test_possible_moves():
     assert_board(boards, logic.possible_moves)
 
 
+def test_movement():
+    resulting_board = [ 
+        [EMP, O, X],
+        [O, X, O],
+        [O, X, EMP],
+    ]
+    
+    boards = [
+        (GAME_OVER_1, NameError("notValidMove")),
+        (POSSIBLE_MOVES_1, resulting_board)
+    ]
+    
+    assert_board(boards, logic.movement)
+
+
 def assert_board(boards: list, function: callable):
     for board in boards:
         assert function(board[0]) == board[1]
