@@ -21,6 +21,9 @@ green = (0, 255, 0)
 
 # Agents
 user = None
+ai = None
+
+# Environment
 board = logic.initial_state()
 
 # Main loop
@@ -95,13 +98,38 @@ while running:
                     tile_origin[0] + j * tile_size,  # left
                     tile_origin[1] + i * tile_size,  # Top
                     tile_size,
-                    tile_size
+                    tile_size,
                 )
                 pygame.draw.rect(screen, green, tile, 1)
-                
+
             # TO DO: implement logic to set a movement in the board
+
+        # Check game status
+        game_over = logic.game_over(board)
+        player = logic.who_plays(board)
+
+        # Get title
+        # Check if game is over
+        if game_over:
+            winner = logic.winner(board)
+            # If no winner: tie
+            if winner == None:
+                title = "Game Over: There is a Tie"
+            # If winner: shows winner
+            else:
+                title = f"Game Over: {winner} Won"
+
+        # Else check for player
+        elif user == player:
+            title = f"Plays as {user}"
+        else:
+            title = "Computer thinking..."
             
-        # Show title
+        title = font.render(title, True, white)
+        title_rect = title.get_rect()
+        title_rect.center = ((width / 2), 50)
+        screen.blit(title, title_rect)
+        
         
 
     pygame.display.flip()
