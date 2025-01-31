@@ -73,6 +73,11 @@ GAME_OVER_2 = [
     [O, X, O],
 ]
 
+POSSIBLE_MOVES_1 = [
+    [EMP, O, X],
+    [O, EMP, O],
+    [O, X, EMP],
+]
 
 def main():
     test_winner()
@@ -110,7 +115,16 @@ def test_game_over():
         (PLAYER_X, False)
     ]
     
-    assert_board(boards, logic.game_over)    
+    assert_board(boards, logic.game_over)
+    
+
+def test_possible_moves():
+    boards = [
+        (POSSIBLE_MOVES_1, set(0, 0), (1, 1), (2, 2)),
+        (GAME_OVER_2, NameError("notValidMove")),
+    ]
+    
+    assert_board(boards, logic.possible_moves)
 
 
 def assert_board(boards: list, function: callable):
