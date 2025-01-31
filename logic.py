@@ -1,3 +1,5 @@
+import copy
+
 # Global variables
 X = "X"
 O = "O"
@@ -75,3 +77,42 @@ def winner(board):
 
     # If no winner
     return None
+
+
+def possible_moves(board):
+    """
+    Returns a set of tuples with all the possible moves in the current
+    board state
+    """
+    possible_moves = set()
+    
+    # Gets the possible movements
+    for i in range(len(board)):
+        for j in range (len(board[i])):
+            if board[i][j] is None:
+                possible_moves.add((i, j))
+    
+    return possible_moves
+
+
+def movement(board, move):
+    """
+    Returns the resulting board when perform a [i][j] movement
+    """
+    # If movement not possible
+    if board[move[0]][move[1]] is not None:
+        raise NameError("notValidMove")
+    
+    # Create a deep copy of the board
+    new_board = copy.deepcopy(board)
+    # Determine whether X or O is playing
+    player = who_plays(board)
+    # Set new board state with respective player move
+    new_board[move[0]][move[1]] = player
+    
+    return new_board
+        
+
+# TODO: implement min max
+def min_max():
+    pass
