@@ -1,4 +1,5 @@
 import copy
+import random
 
 # Global variables
 X = "X"
@@ -114,5 +115,8 @@ def movement(board, move):
         
 
 # TODO: implement min max
-def min_max():
-    pass
+def min_max(board):    
+    # Return possible movements (not optimal yet: only for testing board fronted functionality)
+    moves = possible_moves(board)
+    
+    return random.choice(moves)
