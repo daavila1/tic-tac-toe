@@ -61,10 +61,23 @@ PLAYER_X = [
     [X, EMP, O],
 ]
 
+GAME_OVER_1 = [
+    [X, EMP, EMP],
+    [EMP, X, O],
+    [X, EMP, X],
+]
+
+GAME_OVER_2 = [
+    [X, O, X],
+    [O, X, O],
+    [O, X, O],
+]
+
 
 def main():
     test_winner()
-    test_player()
+    test_who_plays()
+    test_game_over()
 
 
 def test_winner():
@@ -82,13 +95,22 @@ def test_winner():
     assert_board(boards, logic.winner)
 
 
-def test_player():
+def test_who_plays():
     boards = [
         (PLAYER_O, O),
         (PLAYER_X, X),
     ]
 
     assert_board(boards, logic.who_plays)
+    
+def test_game_over():
+    boards = [
+        (GAME_OVER_1, True),
+        (GAME_OVER_2, True),
+        (PLAYER_X, False)
+    ]
+    
+    assert_board(boards, logic.game_over)    
 
 
 def assert_board(boards: list, function: callable):
