@@ -71,9 +71,9 @@ def winner(board):
     primary_diagonal = [board[i][i] for i in range(len(board))]
     secondary_diagonal = [board[i][(len(board) - 1) - i] for i in range(len(board))]
 
-    if primary_diagonal.count(X) == 3:
+    if primary_diagonal.count(X) == 3 or secondary_diagonal.count(X) == 3:
         return X
-    elif secondary_diagonal.count(O) == 3:
+    elif primary_diagonal.count(O) == 3 or secondary_diagonal.count(O) == 3:
         return O
 
     # If no winner
