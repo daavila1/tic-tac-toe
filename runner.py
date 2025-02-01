@@ -294,24 +294,43 @@ while running:
 
         # Check for game over
         if game_over:
-            # Draw button
-            play_again_button = pygame.Rect(width / 3, height - 60, width / 3, 50)
-            play_again_text = button_font.render("Play Again", True, titles_color)
-            play_again_rect = play_again_text.get_rect()
-            play_again_rect.center = play_again_button.center
-            pygame.draw.rect(screen, buttons_color, play_again_button)
-            screen.blit(play_again_text, play_again_rect)
+            # Create play again button
+            button_chars = [
+                "Play Again",  # text
+                (1 * (width / 12), height - 60),  # pos (left, top)
+                (width / 3, 50),  # dim (width, heigh)
+                buttons_color,  # button color
+                titles_color,  # text color
+            ]
+            button_play_again = create_button(*button_chars)
+            
+            # Create main menu button
+            button_chars = [
+                "Main Menu",  # text
+                (7 * (width / 12), height - 60),  # pos (left, top)
+                (width / 3, 50),  # dim (width, heigh)
+                buttons_color,  # button color
+                titles_color,  # text color
+            ]
+            button_main_menu = create_button(*button_chars)
 
             if pygame.mouse.get_pressed()[0]:
                 x, y = pygame.mouse.get_pos()
 
-                if play_again_button.collidepoint(x, y):
-                    # reset initial game state
-                    time.sleep(0.1)
+                if button_play_again.collidepoint(x, y):
+                    time.sleep(0.2)
+                    # Reset game state
                     user = None
                     ai = False
-                    user = None
-                    main_menu = True
                     board = logic.initial_state()
+                    
+                if button_main_menu.collidepoint(x, y):
+                    time.sleep(0.2)
+                    # Reset all variables to initial state
+                    user = None
+                    user_2 = False
+                    ai = False
+                    board = logic.initial_state()
+                    main_menu = True
 
     pygame.display.flip()
