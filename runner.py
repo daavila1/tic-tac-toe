@@ -73,6 +73,9 @@ def draw_button(text: str, pos: tuple, dim: tuple, button_color: tuple, text_col
     # Draw button with text
     pygame.draw.rect(screen, button_color, button)
     screen.blit(text, rect)
+    
+    # Return instance
+    return button
 
 
 # Main loop
@@ -87,7 +90,7 @@ while running:
     screen.blit(background, (0, 0))
 
     # Main menu
-    if user is None and user_1 is None:
+    if user is not None and user_1 is None:
         # Draw title
         draw_title("# Tic Tac Toe #")
 
@@ -126,35 +129,29 @@ while running:
         
 
     # User choose X or O
-    elif user is None and not user_1:
+    elif user is None: # and not user_1:
         # Draw title
-        draw_title()
+        draw_title("# Tic Tac Toe #")
 
         # Draw x button selector
-        button_play_x = pygame.Rect(
-            1 * (width / 12),
-            height / 2 - 30,
-            width / 3,
-            50,
-        )
-        play_x = button_font.render("Play as X", True, x_color)
-        play_x_rect = play_x.get_rect()
-        play_x_rect.center = button_play_x.center
-        pygame.draw.rect(screen, buttons_color, button_play_x)
-        screen.blit(play_x, play_x_rect)
+        button_chars = [
+            "Play as X", # text
+            (1 * (width / 12), height / 2), # pos (left, top)
+            (width / 3, 50), # dim (width, heigh)
+            buttons_color, # button color
+            x_color, # text color
+        ]
+        button_play_x = draw_button(*button_chars)
 
         # Draw O button selector
-        button_play_o = pygame.Rect(
-            7 * (width / 12),
-            height / 2 - 30,
-            width / 3,
-            50,
-        )
-        play_o = button_font.render("Play as O", True, o_color)
-        play_o_rect = play_o.get_rect()
-        play_o_rect.center = button_play_o.center
-        pygame.draw.rect(screen, buttons_color, button_play_o)
-        screen.blit(play_o, play_o_rect)
+        button_chars = [
+            "Play as O", # text
+            (7 * (width / 12), height / 2), # pos (left, top)
+            (width / 3, 50), # dim (width, heigh)
+            buttons_color, # button color
+            o_color, # text color
+        ]
+        button_play_o = draw_button(*button_chars)
 
         # Check if left button is clicked
         if pygame.mouse.get_pressed()[0]:
@@ -242,11 +239,13 @@ while running:
             title = f"Plays as {user}"
         else:
             title = "Computer thinking..."
-
-        title = title_font.render(title, True, titles_color)
-        title_rect = title.get_rect()
-        title_rect.center = ((width / 2), 50)
-        screen.blit(title, title_rect)
+        
+        # Draw title
+        draw_title(title)
+        # title = title_font.render(title, True, titles_color)
+        # title_rect = title.get_rect()
+        # title_rect.center = ((width / 2), 50)
+        # screen.blit(title, title_rect)
 
         # Check for AI move
         if not game_over and user != player:
