@@ -11,13 +11,23 @@ size = width, height = 600, 400  # Window size
 # Set up the display
 screen = pygame.display.set_mode(size)
 
-# Load system font
-font = pygame.font.SysFont("Arial", 30)
+# Load font
+font_1 = "static/fonts/thunderstorm-2.ttf"
+title_font = pygame.font.Font(font_1, 60)
+button_font = pygame.font.Font(font_1, 40)
+X_O_font = pygame.font.Font(font_1, 50)
 
 # Colors
-black = (0, 0, 0)
-white = (255, 255, 255)
-green = (0, 255, 0)
+screen_color = (0, 0, 0)  # black
+buttons_color = (150, 50, 255)  # neon purple
+titles_color = (100, 255, 255)  # neon blue
+board_color = (57, 255, 140)  # neon green
+x_color = (255, 20, 147)  # pink neon
+o_color = (255, 255, 100)  # yellow neon
+
+# Back-ground
+background = pygame.image.load("static/img/background.jpg")
+background = pygame.transform.scale(background, (width, height))
 
 # Agents
 user = None
@@ -34,40 +44,41 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill(black)
+    screen.fill(screen_color)
+    screen.blit(background, (0, 0))
 
     # User choose X or O
     if user is None:
         # Draw title
-        title = font.render("Hello, gamer! :)", True, white)
+        title = title_font.render("# Tic Tac Toe # ", True, titles_color)
         title_rect = title.get_rect()
-        title_rect.center = ((width / 2), 50)
+        title_rect.center = ((width / 2), 80)
         screen.blit(title, title_rect)
 
         # Draw x button selector
         button_play_x = pygame.Rect(
-            width / 8,
-            height / 3,
-            width / 4,
+            1 * (width / 12),
+            height / 2 - 30,
+            width / 3,
             50,
         )
-        play_x = font.render("Play as X", True, green)
+        play_x = button_font.render("Play as X", True, x_color)
         play_x_rect = play_x.get_rect()
         play_x_rect.center = button_play_x.center
-        pygame.draw.rect(screen, white, button_play_x)
+        pygame.draw.rect(screen, buttons_color, button_play_x)
         screen.blit(play_x, play_x_rect)
 
         # Draw O button selector
         button_play_o = pygame.Rect(
-            5 * (width / 8),
-            height / 3,
-            width / 4,
+            7 * (width / 12),
+            height / 2 - 30,
+            width / 3,
             50,
         )
-        play_o = font.render("Play as O", True, green)
+        play_o = button_font.render("Play as O", True, o_color)
         play_o_rect = play_o.get_rect()
         play_o_rect.center = button_play_o.center
-        pygame.draw.rect(screen, white, button_play_o)
+        pygame.draw.rect(screen, buttons_color, button_play_o)
         screen.blit(play_o, play_o_rect)
 
         # Check if left button is clicked
@@ -78,12 +89,12 @@ while running:
             if button_play_x.collidepoint(x, y):
                 time.sleep(0.1)  # Avoid multiple prints
                 # Debugging
-                print("playing as X")
+                # print("playing as X")
                 user = logic.X
             elif button_play_o.collidepoint(x, y):
                 time.sleep(0.1)  # Avoid multiple prints
                 # Debugging
-                print("playing as O")
+                # print("playing as O")
                 user = logic.O
 
     # User not None: game has started
@@ -105,19 +116,36 @@ while running:
                     tile_size,  # Width
                     tile_size,  # Height
                 )
-                pygame.draw.rect(screen, green, tile, 1)
+                pygame.draw.rect(screen, board_color, tile, 2)
 
                 # Draw each made move into the board
                 # Check for not empty tile
                 if board[i][j] is not None:
                     # Render saved text board i, j into the corresponding tile
-                    move = font.render(board[i][j], True, white)
+
+                    # Select move color
+                    if board[i][j] == logic.X:
+                        move_color = x_color
+                    elif board[i][j] == logic.O:
+                        move_color = o_color
+
+                    move = X_O_font.render(board[i][j], True, move_color)
                     move_rect = move.get_rect()  # Get the rect of move
                     move_rect.center = tile.center
                     screen.blit(move, move_rect)
 
                 row.append(tile)
             tiles.append(row)
+
+        # Border rect to delete external lines
+        external_rect = pygame.Rect(
+            tile_origin[0],
+            tile_origin[1],
+            tile_size * 3,
+            tile_size * 3,
+        )
+    
+        pygame.draw.rect(screen, screen_color, external_rect, 3)
 
         # Check game status
         game_over = logic.game_over(board)
@@ -140,7 +168,7 @@ while running:
         else:
             title = "Computer thinking..."
 
-        title = font.render(title, True, white)
+        title = title_font.render(title, True, titles_color)
         title_rect = title.get_rect()
         title_rect.center = ((width / 2), 50)
         screen.blit(title, title_rect)
@@ -170,10 +198,10 @@ while running:
         if game_over:
             # Draw button
             play_again_button = pygame.Rect(width / 3, height - 60, width / 3, 50)
-            play_again_text = font.render("Play Again", True, black)
+            play_again_text = button_font.render("Play Again", True, titles_color)
             play_again_rect = play_again_text.get_rect()
             play_again_rect.center = play_again_button.center
-            pygame.draw.rect(screen, white, play_again_button)
+            pygame.draw.rect(screen, buttons_color, play_again_button)
             screen.blit(play_again_text, play_again_rect)
 
             if pygame.mouse.get_pressed()[0]:
