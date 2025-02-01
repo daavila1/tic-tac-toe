@@ -52,7 +52,7 @@ def draw_title(text: str, height: int):
     screen.blit(title, title_rect)
 
 
-def draw_button(
+def create_button(
     text: str, pos: tuple, dim: tuple, button_color: tuple, text_color: tuple
 ):
     """
@@ -110,7 +110,7 @@ while running:
             buttons_color,  # button color
             titles_color,  # text color
         ]
-        button_player_vs_player = draw_button(*button_chars)
+        button_player_vs_player = create_button(*button_chars)
 
         # Player vs AI button
         button_chars = [
@@ -120,7 +120,7 @@ while running:
             buttons_color,  # button color
             titles_color,  # text color
         ]
-        button_player_vs_ai = draw_button(*button_chars)
+        button_player_vs_ai = create_button(*button_chars)
 
         # Exit button
         button_chars = [
@@ -130,7 +130,7 @@ while running:
             buttons_color,  # button color
             titles_color,  # text color
         ]
-        button_exit = draw_button(*button_chars)
+        button_exit = create_button(*button_chars)
 
         # Check for button clicked
         if pygame.mouse.get_pressed()[0]:
@@ -163,7 +163,7 @@ while running:
             buttons_color,  # button color
             x_color,  # text color
         ]
-        button_play_x = draw_button(*button_chars)
+        button_play_x = create_button(*button_chars)
 
         # Draw O button selector
         button_chars = [
@@ -173,7 +173,7 @@ while running:
             buttons_color,  # button color
             o_color,  # text color
         ]
-        button_play_o = draw_button(*button_chars)
+        button_play_o = create_button(*button_chars)
 
         # Check if left button is clicked
         if pygame.mouse.get_pressed()[0]:
