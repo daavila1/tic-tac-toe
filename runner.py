@@ -30,11 +30,50 @@ background = pygame.image.load("static/img/background.jpg")
 background = pygame.transform.scale(background, (width, height))
 
 # Agents
-user = None
+user = None  # player 1
+user_1 = None  # player 2
 ai = False  # boolean for ai turn or nor
 
 # Environment
 board = logic.initial_state()
+
+
+def draw_title(text: str):
+    """
+    Draw title: tic tac toe
+    """
+    # Draw title
+    title = title_font.render(text, True, titles_color)
+    title_rect = title.get_rect()
+    title_rect.center = ((width / 2), 80)
+    screen.blit(title, title_rect)
+
+
+def draw_button(text: str, pos: tuple, dim: tuple, button_color: tuple, text_color: tuple):
+    """
+    Draw a button
+    """
+    # Unpack tuples
+    left, top = pos 
+    width, height = dim
+    
+    # Set button dimensions
+    button = pygame.Rect(
+        left,
+        top,
+        width,
+        height,
+    )
+
+    # Render text
+    text = button_font.render(text, True, text_color)
+    rect = text.get_rect()
+    rect.center = button.center
+    
+    # Draw button with text
+    pygame.draw.rect(screen, button_color, button)
+    screen.blit(text, rect)
+
 
 # Main loop
 running = True
@@ -47,13 +86,49 @@ while running:
     screen.fill(screen_color)
     screen.blit(background, (0, 0))
 
-    # User choose X or O
-    if user is None:
+    # Main menu
+    if user is None and user_1 is None:
         # Draw title
-        title = title_font.render("# Tic Tac Toe # ", True, titles_color)
-        title_rect = title.get_rect()
-        title_rect.center = ((width / 2), 80)
-        screen.blit(title, title_rect)
+        draw_title("# Tic Tac Toe #")
+
+        # Button
+        top_first_button = 2 * (height / 5)
+        
+        # Player vs player button
+        button_chars = [
+            "Player vs Player", # text
+            (width / 2 - width / 6 - 25, top_first_button), # pos (left, top)
+            (width / 3 + 50, 50), # dim (width, heigh)
+            buttons_color, # button color
+            titles_color, # text color
+        ]
+        draw_button(*button_chars)
+        
+        # Player vs AI button
+        button_chars = [
+            "Player vs AI", # text
+            (width / 2 - width / 6 - 25, top_first_button + 75), # pos (left, top)
+            (width / 3 + 50, 50), # dim (width, heigh)
+            buttons_color, # button color
+            titles_color, # text color
+        ]   
+        draw_button(*button_chars)
+        
+        # Exit button
+        button_chars = [
+            "Exit", # text
+            (width / 2 - width / 6 - 25, top_first_button + 150), # pos (left, top)
+            (width / 3 + 50, 50), # dim (width, heigh)
+            buttons_color, # button color
+            titles_color, # text color
+        ]
+        draw_button(*button_chars)
+        
+
+    # User choose X or O
+    elif user is None and not user_1:
+        # Draw title
+        draw_title()
 
         # Draw x button selector
         button_play_x = pygame.Rect(
@@ -144,7 +219,7 @@ while running:
             tile_size * 3,
             tile_size * 3,
         )
-    
+
         pygame.draw.rect(screen, screen_color, external_rect, 3)
 
         # Check game status
