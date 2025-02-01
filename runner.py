@@ -37,6 +37,9 @@ ai = False  # boolean for ai turn or nor
 # Environment
 board = logic.initial_state()
 
+# Menu
+main_menu = True
+
 
 def draw_title(text: str):
     """
@@ -49,14 +52,16 @@ def draw_title(text: str):
     screen.blit(title, title_rect)
 
 
-def draw_button(text: str, pos: tuple, dim: tuple, button_color: tuple, text_color: tuple):
+def draw_button(
+    text: str, pos: tuple, dim: tuple, button_color: tuple, text_color: tuple
+):
     """
     Draw a button
     """
     # Unpack tuples
-    left, top = pos 
+    left, top = pos
     width, height = dim
-    
+
     # Set button dimensions
     button = pygame.Rect(
         left,
@@ -69,11 +74,11 @@ def draw_button(text: str, pos: tuple, dim: tuple, button_color: tuple, text_col
     text = button_font.render(text, True, text_color)
     rect = text.get_rect()
     rect.center = button.center
-    
+
     # Draw button with text
     pygame.draw.rect(screen, button_color, button)
     screen.blit(text, rect)
-    
+
     # Return instance
     return button
 
@@ -90,66 +95,81 @@ while running:
     screen.blit(background, (0, 0))
 
     # Main menu
-    if user is not None and user_1 is None:
+    if main_menu:  # no selection has happen yet
         # Draw title
         draw_title("# Tic Tac Toe #")
 
-        # Button
+        # first button height
         top_first_button = 2 * (height / 5)
-        
+
         # Player vs player button
         button_chars = [
-            "Player vs Player", # text
-            (width / 2 - width / 6 - 25, top_first_button), # pos (left, top)
-            (width / 3 + 50, 50), # dim (width, heigh)
-            buttons_color, # button color
-            titles_color, # text color
+            "Player vs Player",  # text
+            (width / 2 - width / 6 - 25, top_first_button),  # pos (left, top)
+            (width / 3 + 50, 50),  # dim (width, heigh)
+            buttons_color,  # button color
+            titles_color,  # text color
         ]
-        draw_button(*button_chars)
-        
+        button_player_vs_player = draw_button(*button_chars)
+
         # Player vs AI button
         button_chars = [
-            "Player vs AI", # text
-            (width / 2 - width / 6 - 25, top_first_button + 75), # pos (left, top)
-            (width / 3 + 50, 50), # dim (width, heigh)
-            buttons_color, # button color
-            titles_color, # text color
-        ]   
-        draw_button(*button_chars)
-        
+            "Player vs AI",  # text
+            (width / 2 - width / 6 - 25, top_first_button + 75),  # pos (left, top)
+            (width / 3 + 50, 50),  # dim (width, heigh)
+            buttons_color,  # button color
+            titles_color,  # text color
+        ]
+        button_player_vs_ai = draw_button(*button_chars)
+
         # Exit button
         button_chars = [
-            "Exit", # text
-            (width / 2 - width / 6 - 25, top_first_button + 150), # pos (left, top)
-            (width / 3 + 50, 50), # dim (width, heigh)
-            buttons_color, # button color
-            titles_color, # text color
+            "Exit",  # text
+            (width / 2 - width / 6 - 25, top_first_button + 150),  # pos (left, top)
+            (width / 3 + 50, 50),  # dim (width, heigh)
+            buttons_color,  # button color
+            titles_color,  # text color
         ]
-        draw_button(*button_chars)
-        
+        button_exit = draw_button(*button_chars)
 
-    # User choose X or O
-    elif user is None: # and not user_1:
+        # Check for button clicked
+        if pygame.mouse.get_pressed()[0]:
+            x, y = pygame.mouse.get_pos()  # Get click position
+
+            if button_player_vs_player.collidepoint(x, y):
+                time.sleep(0.2)
+                pass  # TODO: implement logic player vs player
+
+            elif button_player_vs_ai.collidepoint(x, y):
+                time.sleep(0.2)
+                main_menu = False
+                
+            elif button_exit.collidepoint(x, y):
+                time.sleep(0.2)
+                running = False
+
+    # User choose to plays vs IA
+    elif user is None and not main_menu:  # and not user_1:
         # Draw title
         draw_title("# Tic Tac Toe #")
 
         # Draw x button selector
         button_chars = [
-            "Play as X", # text
-            (1 * (width / 12), height / 2), # pos (left, top)
-            (width / 3, 50), # dim (width, heigh)
-            buttons_color, # button color
-            x_color, # text color
+            "Play as X",  # text
+            (1 * (width / 12), height / 2),  # pos (left, top)
+            (width / 3, 50),  # dim (width, heigh)
+            buttons_color,  # button color
+            x_color,  # text color
         ]
         button_play_x = draw_button(*button_chars)
 
         # Draw O button selector
         button_chars = [
-            "Play as O", # text
-            (7 * (width / 12), height / 2), # pos (left, top)
-            (width / 3, 50), # dim (width, heigh)
-            buttons_color, # button color
-            o_color, # text color
+            "Play as O",  # text
+            (7 * (width / 12), height / 2),  # pos (left, top)
+            (width / 3, 50),  # dim (width, heigh)
+            buttons_color,  # button color
+            o_color,  # text color
         ]
         button_play_o = draw_button(*button_chars)
 
@@ -239,7 +259,7 @@ while running:
             title = f"Plays as {user}"
         else:
             title = "Computer thinking..."
-        
+
         # Draw title
         draw_title(title)
         # title = title_font.render(title, True, titles_color)
@@ -287,6 +307,7 @@ while running:
                     user = None
                     ai = False
                     user = None
+                    main_menu = True
                     board = logic.initial_state()
 
     pygame.display.flip()
