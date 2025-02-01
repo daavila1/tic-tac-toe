@@ -31,7 +31,7 @@ background = pygame.transform.scale(background, (width, height))
 
 # Agents
 user = None  # player 1
-user_1 = None  # player 2
+user_2 = False  # player 2
 ai = False  # boolean for ai turn or nor
 
 # Environment
@@ -41,14 +41,14 @@ board = logic.initial_state()
 main_menu = True
 
 
-def draw_title(text: str):
+def draw_title(text: str, height: int):
     """
     Draw title: tic tac toe
     """
     # Draw title
     title = title_font.render(text, True, titles_color)
     title_rect = title.get_rect()
-    title_rect.center = ((width / 2), 80)
+    title_rect.center = ((width / 2), height)
     screen.blit(title, title_rect)
 
 
@@ -97,7 +97,7 @@ while running:
     # Main menu
     if main_menu:  # no selection has happen yet
         # Draw title
-        draw_title("# Tic Tac Toe #")
+        draw_title("# Tic Tac Toe #", 80)
 
         # first button height
         top_first_button = 2 * (height / 5)
@@ -138,20 +138,22 @@ while running:
 
             if button_player_vs_player.collidepoint(x, y):
                 time.sleep(0.2)
-                pass  # TODO: implement logic player vs player
+                user_2 = True
+                main_menu = False
 
             elif button_player_vs_ai.collidepoint(x, y):
                 time.sleep(0.2)
                 main_menu = False
-                
+
             elif button_exit.collidepoint(x, y):
                 time.sleep(0.2)
                 running = False
 
     # User choose to plays vs IA
-    elif user is None and not main_menu:  # and not user_1:
+    # Select player menu
+    elif user is None and not main_menu and not user_2:
         # Draw title
-        draw_title("# Tic Tac Toe #")
+        draw_title("# Tic Tac Toe #", 80)
 
         # Draw x button selector
         button_chars = [
@@ -189,7 +191,7 @@ while running:
                 # print("playing as O")
                 user = logic.O
 
-    # User not None: game has started
+    # User not None, not main menu and not selection menu: game has started
     else:
         # Draw game board
         tile_size = 80
@@ -229,14 +231,13 @@ while running:
                 row.append(tile)
             tiles.append(row)
 
-        # Border rect to delete external lines
+        # Border rect
         external_rect = pygame.Rect(
             tile_origin[0],
             tile_origin[1],
             tile_size * 3,
             tile_size * 3,
         )
-
         pygame.draw.rect(screen, screen_color, external_rect, 3)
 
         # Check game status
@@ -254,18 +255,21 @@ while running:
             else:
                 title = f"Game Over: {winner} Won"
 
-        # Else check for player
+        # If user select vs AI, then user has X or O
+        # If user == player, user turn
         elif user == player:
             title = f"Plays as {user}"
+        # If user select PvP, then user is neither X nor O
+        elif user_2:
+            # Assign user current player
+            user = player
+            title = f"Plays as {player}"
+        # Else computer turn
         else:
             title = "Computer thinking..."
 
         # Draw title
-        draw_title(title)
-        # title = title_font.render(title, True, titles_color)
-        # title_rect = title.get_rect()
-        # title_rect.center = ((width / 2), 50)
-        # screen.blit(title, title_rect)
+        draw_title(title, 40)
 
         # Check for AI move
         if not game_over and user != player:
