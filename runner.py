@@ -275,7 +275,7 @@ while running:
         if not game_over and user != player:
             if ai:
                 time.sleep(0.1)
-                move = logic.min_max(board)  # TODO: implement MIX MAX
+                move = logic.minimax(board, depth=0)  # TODO: implement MIX MAX
                 board = logic.movement(board, move)
                 ai = False
 
@@ -303,7 +303,7 @@ while running:
                 titles_color,  # text color
             ]
             button_play_again = create_button(*button_chars)
-            
+
             # Create main menu button
             button_chars = [
                 "Main Menu",  # text
@@ -323,7 +323,7 @@ while running:
                     user = None
                     ai = False
                     board = logic.initial_state()
-                    
+
                 if button_main_menu.collidepoint(x, y):
                     time.sleep(0.2)
                     # Reset all variables to initial state

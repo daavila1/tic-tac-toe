@@ -86,13 +86,13 @@ def possible_moves(board):
     board state
     """
     possible_moves = set()
-    
+
     # Gets the possible movements
     for i in range(len(board)):
-        for j in range (len(board[i])):
+        for j in range(len(board[i])):
             if board[i][j] is None:
                 possible_moves.add((i, j))
-    
+
     return possible_moves
 
 
@@ -103,20 +103,87 @@ def movement(board, move):
     # If movement not possible
     if board[move[0]][move[1]] is not None:
         raise NameError("notValidMove")
-    
+
     # Create a deep copy of the board
     new_board = copy.deepcopy(board)
     # Determine whether X or O is playing
     player = who_plays(board)
     # Set new board state with respective player move
     new_board[move[0]][move[1]] = player
-    
+
     return new_board
-        
+
 
 # TODO: implement min max
-def min_max(board):    
-    # Return possible movements (not optimal yet: only for testing board fronted functionality)
-    moves = list(possible_moves(board))
-    
-    return random.choice(moves)
+def minimax(board, depth, is_maximizing=True):
+    if winner(board):
+        return (utility_function(board))
+
+    if who_plays(board) == O:
+        is_maximizing = False
+
+    all_moves = possible_moves(board)
+    all_moves_score = []
+
+    if is_maximizing:
+        best_score = -1000
+
+        for move in all_moves:
+            depth_board = movement(board, move)
+            score = minimax(depth_board, depth + 1)
+            all_moves_score.append((move, score))
+            best_score = max(score, best_score)
+
+        if depth == 0:
+            max_score = max(all_moves_score, key=lambda x: x[1])[1]
+            print(f"max score: {max_score}")
+            print(f"best score {max_score}")
+            print(f"all moves: {all_moves_score}")
+            best_moves = [move for move in all_moves_score if move[1] == max_score]
+            print(f"best moves {best_moves}")
+            return random.choice(best_moves)[0]
+        
+        else:
+            return best_score
+
+    else:
+        best_score = 1000
+
+        for move in all_moves:
+            depth_board = movement(board, move)
+            score = minimax(depth_board, depth + 1)
+            all_moves_score.append((move, score))
+            best_score = min(score, best_score)
+
+        if depth == 0:
+            min_score = min(all_moves_score, key=lambda x: x[1])[1]
+            print(f"min score: {min_score}")
+            print(f"best score {min_score}")
+            print(f"all moves: {all_moves_score}")
+            best_moves = [move for move in all_moves_score if move[1] == min_score]
+            print(f"best moves {best_moves}")
+            return random.choice(best_moves)[0]
+        
+        else:
+            return best_score
+
+
+def utility_function(board):
+    # u(w) is a function of the winner
+    # u(w) = w(n+1), n = number of remaining spaces in the board
+    empty_tiles = 0
+
+    for rows in board:
+        empty_tiles += rows.count(EMP)
+
+    w = winner(board)
+
+    if w == X:  # X is max player
+        w = 1
+    elif w == O:  # O is the min player
+        w = -1
+    else:
+        w = 0  # 0 for tie
+
+    # Return utility value
+    return w * (empty_tiles + 1)
