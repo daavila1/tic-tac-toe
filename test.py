@@ -79,10 +79,29 @@ POSSIBLE_MOVES_1 = [
     [O, X, EMP],
 ]
 
+UTILITY_1 = [
+    [X, O, X],
+    [X, O, X],
+    [EMP, O, O],
+]
+
+UTILITY_2 = [
+    [X, O, X],
+    [X, O, EMP],
+    [X, EMP, O],
+]
+
+UTILITY_3 = [
+    [X, O, X],
+    [X, O, X],
+    [O, X, O],
+]
+
 def main():
     test_winner()
     test_who_plays()
     test_game_over()
+    test_utility_func()
 
 
 def test_winner():
@@ -140,6 +159,16 @@ def test_movement():
     ]
     
     assert_board(boards, logic.movement)
+
+
+def test_utility_func():
+    boards = [
+        (UTILITY_1, -2),
+        (UTILITY_2, 3),
+        (UTILITY_3, 0),
+    ]
+    
+    assert_board(boards, logic.utility_function)
 
 
 def assert_board(boards: list, function: callable):
