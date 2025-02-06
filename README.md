@@ -21,6 +21,7 @@ The utility function determines the score of a board state and is defined as:
 $$
 U(w) = w \times (n + 1)
 $$
+
 Where:
 
 - $w$ is the winner of the board (`1` for X, `-1` for O, `0` for a tie).
