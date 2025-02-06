@@ -2,11 +2,12 @@
 An AI implementation for the Tic-Tac-Toe game using the Minimax algorithm. The AI evaluates possible moves recursively to make optimal decisions, ensuring the best outcome. Additionally, it allows player vs player gameplay. 
 
 ✅ Built with Pygame for the game interface
+
 ✅ Optimal decision-making for unbeatable AI
 
 <p align="center">
   <img src="https://i.imgur.com/8H1Gi3i.png" width="200" />
-  <img src="c:\Users\da_av\AppData\Local\Temp\xM6obj7.png" width="200" />
+  <img src="https://i.imgur.com/xM6obj7.png" width="200" />
   <img src="https://i.imgur.com/cUG3x42.png" width="200" />
   <img src="https://i.imgur.com/gXzfUqz.png" width="200" />
 </p>
