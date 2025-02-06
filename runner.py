@@ -1,6 +1,6 @@
-import pygame
-import sys
 import time
+
+import pygame
 
 import logic
 
@@ -275,7 +275,7 @@ while running:
         if not game_over and user != player:
             if ai:
                 time.sleep(0.1)
-                move = logic.minimax(board, depth=0)  # TODO: implement MIX MAX
+                move = logic.minimax(board, depth=0)
                 board = logic.movement(board, move)
                 ai = False
 

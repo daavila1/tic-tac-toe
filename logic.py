@@ -114,63 +114,92 @@ def movement(board, move):
     return new_board
 
 
-# TODO: implement min max
-def minimax(board, depth, is_maximizing=True):
-    if winner(board):
-        return (utility_function(board))
-
-    if who_plays(board) == O:
-        is_maximizing = False
-
+def minimax(board, depth):
+    """
+    Minimax implementation with recursion: At the root node, returns the best
+    move for the current board. At leaf nodes, returns the best possible score
+    (min or max, depending on the board state).
+    """
+    # Get all possible moves in the current board
     all_moves = possible_moves(board)
+
+    # If winner or not empty tiles: leaf node reached. Stop recursion and return utility value
+    if winner(board) or not all_moves:
+        return utility_function(board)
+
+    # Max: X, Min: O
+    is_maximizing = who_plays(board) != O
+
+    # Initialize empty list for storage: tuples(move, score) -> list of tuples
     all_moves_score = []
 
+    # If player is X, MAX
     if is_maximizing:
-        best_score = -1000
+        # Worst case scenario
+        best_score = float(
+            "-inf"
+        )  # best score is something negative so Max can easily beat it
 
+        # Check for all possible moves
         for move in all_moves:
+            # Get the boar resulting when performing move
             depth_board = movement(board, move)
+            # Call minimax recursively: nex move min will be called
             score = minimax(depth_board, depth + 1)
-            all_moves_score.append((move, score))
+            # Whe recursion ends: compare the value reached for that move with the highest score
+            # obtained for that board. If score is bigger than score, score is new best score.
             best_score = max(score, best_score)
 
+            # Append moves with score is required only when roots nodes
+            if depth == 0:
+                all_moves_score.append((move, score))
+
+        # Return moves is required only when root nodes. As runner handles moves not scores
         if depth == 0:
-            max_score = max(all_moves_score, key=lambda x: x[1])[1]
-            print(f"max score: {max_score}")
-            print(f"best score {max_score}")
-            print(f"all moves: {all_moves_score}")
-            best_moves = [move for move in all_moves_score if move[1] == max_score]
-            print(f"best moves {best_moves}")
+            # Since current board can have multiple moves with same utility value
+            best_moves = [move for move in all_moves_score if move[1] == best_score]
+
+            # Return a random choice so not every all games behaves the same way
             return random.choice(best_moves)[0]
-        
+
         else:
+            # If not root node, best score is the one that matters
             return best_score
 
+    # O, MIN
     else:
-        best_score = 1000
+        # Worst case scenario
+        best_score = float(
+            "inf"
+        )  # best score is something positive so Min can easily beat it
 
+        # Same logic with max but this time Min try to minimize the best score
         for move in all_moves:
             depth_board = movement(board, move)
             score = minimax(depth_board, depth + 1)
-            all_moves_score.append((move, score))
             best_score = min(score, best_score)
+            all_moves_score.append((move, score))
+
+            if depth == 0:
+                all_moves_score.append((move, score))
 
         if depth == 0:
-            min_score = min(all_moves_score, key=lambda x: x[1])[1]
-            print(f"min score: {min_score}")
-            print(f"best score {min_score}")
-            print(f"all moves: {all_moves_score}")
-            best_moves = [move for move in all_moves_score if move[1] == min_score]
-            print(f"best moves {best_moves}")
+            best_moves = [move for move in all_moves_score if move[1] == best_score]
+
             return random.choice(best_moves)[0]
-        
+
         else:
             return best_score
 
 
 def utility_function(board):
-    # u(w) is a function of the winner
-    # u(w) = w(n+1), n = number of remaining spaces in the board
+    """
+    Returns the utility value of a given board state.
+
+    u(w) = w(n+1), n = number of remaining spaces in the board
+
+    u(w) is weighted based on the remaining spaces in the board
+    """
     empty_tiles = 0
 
     for rows in board:
